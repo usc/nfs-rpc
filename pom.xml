@@ -14,7 +14,7 @@
         <module>nfs-rpc-mina2</module>
         <module>nfs-rpc-netty</module>
         <module>nfs-rpc-netty4</module>
-        <module>nfs-rpc-netty4bycoderplay</module>        
+        <module>nfs-rpc-netty4bycoderplay</module>
         <module>nfs-rpc-benchmark</module>
     </modules>
     <properties>
@@ -53,7 +53,8 @@
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
-                <version>2.6.1</version>
+<!--                 <version>2.6.1</version> -->
+                <version>2.4.1</version>
             </dependency>
             <dependency>
                 <groupId>com.caucho</groupId>
@@ -84,7 +85,7 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>1.7.21</version>
-            </dependency>            
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

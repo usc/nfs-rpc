@@ -3,7 +3,7 @@ package code.google.nfs.rpc.netty.server;
 /**
  * nfs-rpc
  *   Apache License
- *   
+ *
  *   http://code.google.com/p/nfs-rpc (c) 2011
  */
 import io.netty.bootstrap.ServerBootstrap;
@@ -32,7 +32,7 @@ import code.google.nfs.rpc.server.Server;
 
 /**
  * Netty Server
- * 
+ *
  * @author <a href="mailto:bluedavy@gmail.com">bluedavy</a>
  */
 public class NettyServer implements Server {
@@ -52,8 +52,13 @@ public class NettyServer implements Server {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(PROCESSORS * 2, serverWorkerTF);
         workerGroup.setIoRatio(Integer.parseInt(System.getProperty("nfs.rpc.io.ratio", "50")));
         bootstrap = new ServerBootstrap();
-        bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT).option(ChannelOption.SO_REUSEADDR, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.reuseaddress", "true"))).option(ChannelOption.TCP_NODELAY,
-                Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")));
+        bootstrap.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .option(ChannelOption.SO_RCVBUF, 128 * 1024 * 1024)
+                .option(ChannelOption.SO_SNDBUF, 256 * 1024 * 1024)
+                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .option(ChannelOption.SO_REUSEADDR, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.reuseaddress", "true")))
+                .option(ChannelOption.TCP_NODELAY, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")));
     }
 
     public void start(int listenPort, final ExecutorService threadPool) throws Exception {

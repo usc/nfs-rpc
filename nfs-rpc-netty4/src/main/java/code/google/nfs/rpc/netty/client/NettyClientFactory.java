@@ -3,7 +3,7 @@ package code.google.nfs.rpc.netty.client;
 /**
  * nfs-rpc
  *   Apache License
- *   
+ *
  *   http://code.google.com/p/nfs-rpc (c) 2011
  */
 import io.netty.bootstrap.Bootstrap;
@@ -31,7 +31,7 @@ import code.google.nfs.rpc.netty.serialize.NettyProtocolEncoder;
 
 /**
  * Netty Client Factory,to create client based on netty API
- * 
+ *
  * @author <a href="mailto:bluedavy@gmail.com">bluedavy</a>
  */
 public class NettyClientFactory extends AbstractClientFactory {
@@ -56,8 +56,15 @@ public class NettyClientFactory extends AbstractClientFactory {
 
     protected Client createClient(String targetIP, int targetPort, int connectTimeout, String key) throws Exception {
         Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(workerGroup).channel(NioSocketChannel.class).option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT).option(ChannelOption.TCP_NODELAY, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true"))).option(ChannelOption.SO_REUSEADDR,
-                Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.reuseaddress", "true")));
+        bootstrap
+                .group(workerGroup)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.SO_RCVBUF, 128 * 1024 * 1024)
+                .option(ChannelOption.SO_SNDBUF, 256 * 1024 * 1024)
+                .option(ChannelOption.TCP_NODELAY, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")))
+                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .option(ChannelOption.SO_REUSEADDR, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.reuseaddress", "true")));
+
         if (connectTimeout < 1000) {
             bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000);
         } else {
