@@ -1,8 +1,9 @@
 package code.google.nfs.rpc.netty.benchmark;
+
 /**
  * nfs-rpc
  *   Apache License
- *   
+ *
  *   http://code.google.com/p/nfs-rpc (c) 2011
  */
 import code.google.nfs.rpc.benchmark.AbstractSimpleProcessorBenchmarkClient;
@@ -11,17 +12,18 @@ import code.google.nfs.rpc.netty.client.NettyClientFactory;
 
 /**
  * Netty Direct Call RPC Benchmark Client
- * 
+ *
  * @author <a href="mailto:bluedavy@gmail.com">bluedavy</a>
  */
 public class NettySimpleBenchmarkClient extends AbstractSimpleProcessorBenchmarkClient {
 
-	public static void main(String[] args) throws Exception{
-		new NettySimpleBenchmarkClient().run(args);
-	}
-	
-	public ClientFactory getClientFactory() {
-		return NettyClientFactory.getInstance();
-	}
+    public static void main(String[] args) throws Exception {
+        args = new String[] { "127.0.0.1", "9527", "100", "1000", "3", "100", "60", "1" };
+        new NettySimpleBenchmarkClient().run(args);
+    }
+
+    public ClientFactory getClientFactory() {
+        return NettyClientFactory.getInstance();
+    }
 
 }

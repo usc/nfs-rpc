@@ -22,38 +22,37 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
  */
 public class MinaProtocolCodecFilter extends ProtocolCodecFilter {
 
-	private final AttributeKey DECODER_OUT = new AttributeKey(ProtocolCodecFilter.class, "decoderOut");
-	
-	public MinaProtocolCodecFilter() {
-		super(new MinaProtocolEncoder(), new MinaProtocolDecoder());
-	}
+    private final AttributeKey DECODER_OUT = new AttributeKey(ProtocolCodecFilter.class, "decoderOut");
 
-	public void messageReceived(NextFilter nextFilter, IoSession session,
-			Object message) throws Exception {
-		session.setAttribute(DECODER_OUT,new MinaProtocolDecoderOutput(session));
-		super.messageReceived(nextFilter, session, message);
-	}
+    public MinaProtocolCodecFilter() {
+        super(new MinaProtocolEncoder(), new MinaProtocolDecoder());
+    }
 
-	class MinaProtocolDecoderOutput implements ProtocolDecoderOutput {
+    public void messageReceived(NextFilter nextFilter, IoSession session, Object message) throws Exception {
+        session.setAttribute(DECODER_OUT, new MinaProtocolDecoderOutput(session));
+        super.messageReceived(nextFilter, session, message);
+    }
 
-		private final IoSession session;
+    class MinaProtocolDecoderOutput implements ProtocolDecoderOutput {
 
-		private final List<Object> messageQueue = new ArrayList<Object>();
+        private final IoSession session;
 
-		public MinaProtocolDecoderOutput(IoSession session) {
-			this.session = session;
-		}
+        private final List<Object> messageQueue = new ArrayList<Object>();
 
-		public void write(Object message) {
-			messageQueue.add(message);
-			if (session instanceof AbstractIoSession) {
-				((AbstractIoSession) session).increaseReadMessages(System.currentTimeMillis());
-			}
-		}
-		
-		public void flush(NextFilter nextFilter, IoSession session) {
-			nextFilter.messageReceived(session, messageQueue);
-		}
-	}
+        public MinaProtocolDecoderOutput(IoSession session) {
+            this.session = session;
+        }
+
+        public void write(Object message) {
+            messageQueue.add(message);
+            if (session instanceof AbstractIoSession) {
+                ((AbstractIoSession) session).increaseReadMessages(System.currentTimeMillis());
+            }
+        }
+
+        public void flush(NextFilter nextFilter, IoSession session) {
+            nextFilter.messageReceived(session, messageQueue);
+        }
+    }
 
 }

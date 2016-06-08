@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.mina2.benchmark;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -21,19 +22,12 @@ import code.google.nfs.rpc.mina2.client.MinaClientInvocationHandler;
  */
 public class MinaRPCBenchmarkClient extends AbstractRPCBenchmarkClient {
 
-	public static void main(String[] args) throws Exception {
-		new MinaRPCBenchmarkClient().run(args);
-	}
+    public static void main(String[] args) throws Exception {
+        new MinaRPCBenchmarkClient().run(args);
+    }
 
-	public BenchmarkTestService getProxyInstance(
-			List<InetSocketAddress> servers, int clientNums,
-			int connectTimeout, String targetInstanceName,
-			Map<String, Integer> methodTimeouts, int codectype, Integer protocolType) {
-		return (BenchmarkTestService) Proxy.newProxyInstance(
-				MinaRPCBenchmarkClient.class.getClassLoader(),
-				new Class<?>[] { BenchmarkTestService.class },
-				new MinaClientInvocationHandler(servers, clientNums,
-						connectTimeout, targetInstanceName, methodTimeouts,codectype, protocolType));
-	}
+    public BenchmarkTestService getProxyInstance(List<InetSocketAddress> servers, int clientNums, int connectTimeout, String targetInstanceName, Map<String, Integer> methodTimeouts, int codectype, Integer protocolType) {
+        return (BenchmarkTestService) Proxy.newProxyInstance(MinaRPCBenchmarkClient.class.getClassLoader(), new Class<?>[] { BenchmarkTestService.class }, new MinaClientInvocationHandler(servers, clientNums, connectTimeout, targetInstanceName, methodTimeouts, codectype, protocolType));
+    }
 
 }

@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.protocol;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -8,6 +9,7 @@ package code.google.nfs.rpc.protocol;
 import java.io.ByteArrayOutputStream;
 
 import com.caucho.hessian.io.Hessian2Output;
+
 /**
  * Hessian Encoder,use Hessian2
  * 
@@ -15,13 +17,13 @@ import com.caucho.hessian.io.Hessian2Output;
  */
 public class HessianEncoder implements Encoder {
 
-	public byte[] encode(Object object) throws Exception {
-		ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
-		Hessian2Output output = new Hessian2Output(byteArray);
-		output.writeObject(object);
-		output.close();
-		byte[] bytes = byteArray.toByteArray();
-		return bytes;
-	}
+    public byte[] encode(Object object) throws Exception {
+        ByteArrayOutputStream byteArray = new ByteArrayOutputStream();
+        Hessian2Output output = new Hessian2Output(byteArray);
+        output.writeObject(object);
+        output.close();
+        byte[] bytes = byteArray.toByteArray();
+        return bytes;
+    }
 
 }

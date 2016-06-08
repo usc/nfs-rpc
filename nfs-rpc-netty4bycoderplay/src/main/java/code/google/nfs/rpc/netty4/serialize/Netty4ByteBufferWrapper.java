@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty4.serialize;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -7,6 +8,7 @@ package code.google.nfs.rpc.netty4.serialize;
  */
 import io.netty.buffer.ByteBuf;
 import code.google.nfs.rpc.protocol.ByteBufferWrapper;
+
 /**
  * Implements ByteBufferWrapper based on Netty4 ByteBuf
  * 
@@ -14,59 +16,58 @@ import code.google.nfs.rpc.protocol.ByteBufferWrapper;
  */
 public class Netty4ByteBufferWrapper implements ByteBufferWrapper {
 
-	private ByteBuf buffer;
-	
-	
-	public Netty4ByteBufferWrapper(ByteBuf in){
-		buffer = in;
-	}
-	
-	public ByteBufferWrapper get(int capacity) {
-		return this;
-	}
+    private ByteBuf buffer;
 
-	public byte readByte() {
-		return buffer.readByte();
-	}
+    public Netty4ByteBufferWrapper(ByteBuf in) {
+        buffer = in;
+    }
 
-	public void readBytes(byte[] dst) {
-		buffer.readBytes(dst);
-	}
+    public ByteBufferWrapper get(int capacity) {
+        return this;
+    }
 
-	public int readInt() {
-		return buffer.readInt();
-	}
+    public byte readByte() {
+        return buffer.readByte();
+    }
 
-	public int readableBytes() {
-		return buffer.readableBytes();
-	}
+    public void readBytes(byte[] dst) {
+        buffer.readBytes(dst);
+    }
 
-	public int readerIndex() {
-		return buffer.readerIndex();
-	}
+    public int readInt() {
+        return buffer.readInt();
+    }
 
-	public void setReaderIndex(int index) {
-		buffer.setIndex(index, buffer.writerIndex());
-	}
+    public int readableBytes() {
+        return buffer.readableBytes();
+    }
 
-	public void writeByte(byte data) {
-		buffer.writeByte(data);
-	}
+    public int readerIndex() {
+        return buffer.readerIndex();
+    }
 
-	public void writeBytes(byte[] data) {
-		buffer.writeBytes(data);
-	}
+    public void setReaderIndex(int index) {
+        buffer.setIndex(index, buffer.writerIndex());
+    }
 
-	public void writeInt(int data) {
-		buffer.writeInt(data);
-	}
-	
-	public ByteBuf getBuffer(){
-		return buffer;
-	}
+    public void writeByte(byte data) {
+        buffer.writeByte(data);
+    }
 
-	public void writeByte(int index, byte data) {
-		buffer.writeByte(data);
-	}
+    public void writeBytes(byte[] data) {
+        buffer.writeBytes(data);
+    }
+
+    public void writeInt(int data) {
+        buffer.writeInt(data);
+    }
+
+    public ByteBuf getBuffer() {
+        return buffer;
+    }
+
+    public void writeByte(int index, byte data) {
+        buffer.writeByte(data);
+    }
 
 }

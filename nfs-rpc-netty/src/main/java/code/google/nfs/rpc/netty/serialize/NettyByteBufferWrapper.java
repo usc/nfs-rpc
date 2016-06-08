@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty.serialize;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -9,6 +10,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 import code.google.nfs.rpc.protocol.ByteBufferWrapper;
+
 /**
  * Implements ByteBufferWrapper based on Netty ChannelBuffer
  * 
@@ -16,63 +18,63 @@ import code.google.nfs.rpc.protocol.ByteBufferWrapper;
  */
 public class NettyByteBufferWrapper implements ByteBufferWrapper {
 
-	private ChannelBuffer buffer;
-	
-	public NettyByteBufferWrapper(){
-		;
-	}
-	
-	public NettyByteBufferWrapper(ChannelBuffer in){
-		buffer = in;
-	}
-	
-	public ByteBufferWrapper get(int capacity) {
-		buffer = ChannelBuffers.dynamicBuffer(capacity);
-		return this;
-	}
+    private ChannelBuffer buffer;
 
-	public byte readByte() {
-		return buffer.readByte();
-	}
+    public NettyByteBufferWrapper() {
+        ;
+    }
 
-	public void readBytes(byte[] dst) {
-		buffer.readBytes(dst);
-	}
+    public NettyByteBufferWrapper(ChannelBuffer in) {
+        buffer = in;
+    }
 
-	public int readInt() {
-		return buffer.readInt();
-	}
+    public ByteBufferWrapper get(int capacity) {
+        buffer = ChannelBuffers.dynamicBuffer(capacity);
+        return this;
+    }
 
-	public int readableBytes() {
-		return buffer.readableBytes();
-	}
+    public byte readByte() {
+        return buffer.readByte();
+    }
 
-	public int readerIndex() {
-		return buffer.readerIndex();
-	}
+    public void readBytes(byte[] dst) {
+        buffer.readBytes(dst);
+    }
 
-	public void setReaderIndex(int index) {
-		buffer.setIndex(index, buffer.writerIndex());
-	}
+    public int readInt() {
+        return buffer.readInt();
+    }
 
-	public void writeByte(byte data) {
-		buffer.writeByte(data);
-	}
+    public int readableBytes() {
+        return buffer.readableBytes();
+    }
 
-	public void writeBytes(byte[] data) {
-		buffer.writeBytes(data);
-	}
+    public int readerIndex() {
+        return buffer.readerIndex();
+    }
 
-	public void writeInt(int data) {
-		buffer.writeInt(data);
-	}
-	
-	public ChannelBuffer getBuffer(){
-		return buffer;
-	}
+    public void setReaderIndex(int index) {
+        buffer.setIndex(index, buffer.writerIndex());
+    }
 
-	public void writeByte(int index, byte data) {
-		buffer.writeByte(data);
-	}
+    public void writeByte(byte data) {
+        buffer.writeByte(data);
+    }
+
+    public void writeBytes(byte[] data) {
+        buffer.writeBytes(data);
+    }
+
+    public void writeInt(int data) {
+        buffer.writeInt(data);
+    }
+
+    public ChannelBuffer getBuffer() {
+        return buffer;
+    }
+
+    public void writeByte(int index, byte data) {
+        buffer.writeByte(data);
+    }
 
 }

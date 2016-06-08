@@ -22,19 +22,19 @@ import java.util.List;
  * @author <a href="mailto:bluedavy@gmail.com">bluedavy</a>
  */
 public class GrizzlyClientHandler extends BaseFilter {
-	
-	private Client client;
-	
+
+    private Client client;
+
     public void setClient(Client client) {
-		this.client = client;
-	}
-	
-	public NextAction handleRead(FilterChainContext ctx) throws IOException {
+        this.client = client;
+    }
+
+    public NextAction handleRead(FilterChainContext ctx) throws IOException {
         final Object message = ctx.getMessage();
-        
+
         IllegalStateException error = null;
-        
-		try {
+
+        try {
             if (message instanceof List) {
                 @SuppressWarnings("unchecked")
                 List<ResponseWrapper> responses = (List<ResponseWrapper>) message;
@@ -44,15 +44,15 @@ public class GrizzlyClientHandler extends BaseFilter {
                 client.putResponse(response);
             } else {
                 error = new IllegalStateException("receive message error,only support List || ResponseWrapper");
-		} 
+            }
         } catch (Exception e) {
             error = new IllegalStateException(e);
-		}
-        
+        }
+
         if (error != null) {
             throw error;
-	}
+        }
 
         return ctx.getStopAction();
-}
+    }
 }

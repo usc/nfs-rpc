@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty.client;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -12,6 +13,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 import code.google.nfs.rpc.netty.serialize.NettyProtocolDecoder;
 import code.google.nfs.rpc.netty.serialize.NettyProtocolEncoder;
+
 /**
  * Netty Factory
  * 
@@ -19,18 +21,18 @@ import code.google.nfs.rpc.netty.serialize.NettyProtocolEncoder;
  */
 public class NettyClientPipelineFactory implements ChannelPipelineFactory {
 
-	private SimpleChannelUpstreamHandler handler;
-	
-	public NettyClientPipelineFactory(SimpleChannelUpstreamHandler handler){
-		this.handler = handler;
-	}
-	
-	public ChannelPipeline getPipeline() throws Exception {
-		ChannelPipeline pipeline = new DefaultChannelPipeline();
-		pipeline.addLast("decoder", new NettyProtocolDecoder());
-		pipeline.addLast("encoder", new NettyProtocolEncoder());
-		pipeline.addLast("handler", handler);
-		return pipeline;
-	}
+    private SimpleChannelUpstreamHandler handler;
+
+    public NettyClientPipelineFactory(SimpleChannelUpstreamHandler handler) {
+        this.handler = handler;
+    }
+
+    public ChannelPipeline getPipeline() throws Exception {
+        ChannelPipeline pipeline = new DefaultChannelPipeline();
+        pipeline.addLast("decoder", new NettyProtocolDecoder());
+        pipeline.addLast("encoder", new NettyProtocolEncoder());
+        pipeline.addLast("handler", handler);
+        return pipeline;
+    }
 
 }

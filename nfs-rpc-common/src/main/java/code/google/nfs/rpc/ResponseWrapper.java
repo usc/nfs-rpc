@@ -13,75 +13,75 @@ package code.google.nfs.rpc;
  */
 public class ResponseWrapper {
 
-	private int requestId = 0;
-	
-	private Object response = null;
-	
-	private boolean isError = false;
-	
-	private Throwable exception = null;
-	
-	private int codecType = Codecs.HESSIAN_CODEC;
-	
-	private int protocolType;
-	
-	private int messageLen;
-	
-	private byte[] responseClassName;
+    private int requestId = 0;
 
-	public ResponseWrapper(int requestId,int codecType,int protocolType){
-		this.requestId = requestId;
-		this.codecType = codecType;
-		this.protocolType = protocolType;
-	}
-	
-	public int getMessageLen() {
-		return messageLen;
-	}
+    private Object response = null;
 
-	public void setMessageLen(int messageLen) {
-		this.messageLen = messageLen;
-	}
+    private boolean isError = false;
 
-	public int getProtocolType() {
-		return protocolType;
-	}
+    private Throwable exception = null;
 
-	public int getCodecType() {
-		return codecType;
-	}
+    private int codecType = Codecs.HESSIAN_CODEC;
 
-	public int getRequestId() {
-		return requestId;
-	}
+    private int protocolType;
 
-	public Object getResponse() {
-		return response;
-	}
+    private int messageLen;
 
-	public void setResponse(Object response) {
-		this.response = response;
-	}
+    private byte[] responseClassName;
 
-	public boolean isError() {
-		return isError;
-	}
+    public ResponseWrapper(int requestId, int codecType, int protocolType) {
+        this.requestId = requestId;
+        this.codecType = codecType;
+        this.protocolType = protocolType;
+    }
 
-	public Throwable getException() {
-		return exception;
-	}
+    public int getMessageLen() {
+        return messageLen;
+    }
 
-	public void setException(Throwable exception) {
-		this.exception = exception;
-		isError = true;
-	}
-	
-	public byte[] getResponseClassName() {
-		return responseClassName;
-	}
+    public void setMessageLen(int messageLen) {
+        this.messageLen = messageLen;
+    }
 
-	public void setResponseClassName(byte[] responseClassName) {
-		this.responseClassName = responseClassName;
-	}
-	
+    public int getProtocolType() {
+        return protocolType;
+    }
+
+    public int getCodecType() {
+        return codecType;
+    }
+
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public Object getResponse() {
+        return response;
+    }
+
+    public void setResponse(Object response) {
+        this.response = response;
+    }
+
+    public boolean isError() {
+        return isError;
+    }
+
+    public Throwable getException() {
+        return exception;
+    }
+
+    public void setException(Throwable exception) {
+        this.exception = exception;
+        isError = true;
+    }
+
+    public byte[] getResponseClassName() {
+        return responseClassName;
+    }
+
+    public void setResponseClassName(byte[] responseClassName) {
+        this.responseClassName = responseClassName;
+    }
+
 }

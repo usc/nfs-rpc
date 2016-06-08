@@ -35,13 +35,9 @@ public class GrizzlyServer implements Server {
 
     public void start(int listenPort, ExecutorService threadpool) throws Exception {
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) threadpool;
-        ThreadPoolConfig config = ThreadPoolConfig.defaultConfig().copy()
-                .setCorePoolSize(threadPoolExecutor.getCorePoolSize())
-                .setMaxPoolSize(threadPoolExecutor.getMaximumPoolSize())
-                .setPoolName("GRIZZLY-SERVER");
-        ExecutorService executorService =
-                GrizzlyExecutorService.createInstance(config);
-        
+        ThreadPoolConfig config = ThreadPoolConfig.defaultConfig().copy().setCorePoolSize(threadPoolExecutor.getCorePoolSize()).setMaxPoolSize(threadPoolExecutor.getMaximumPoolSize()).setPoolName("GRIZZLY-SERVER");
+        ExecutorService executorService = GrizzlyExecutorService.createInstance(config);
+
         FilterChainBuilder filterChainBuilder = FilterChainBuilder.stateless();
         filterChainBuilder.add(new TransportFilter());
         filterChainBuilder.add(new GrizzlyProtocolFilter());

@@ -21,41 +21,38 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
  */
 public class MinaProtocolCodecFilter extends ProtocolCodecFilter {
 
-	public MinaProtocolCodecFilter() {
-		super(new MinaProtocolEncoder(), new MinaProtocolDecoder());
-	}
+    public MinaProtocolCodecFilter() {
+        super(new MinaProtocolEncoder(), new MinaProtocolDecoder());
+    }
 
-	public void messageReceived(NextFilter nextFilter, IoSession session,
-			Object message) throws Exception {
-		session.setAttribute(ProtocolCodecFilter.class.getName()+ ".decoderOut", 
-							 new MinaProtocolDecoderOutput(session,nextFilter));
-		super.messageReceived(nextFilter, session, message);
-	}
+    public void messageReceived(NextFilter nextFilter, IoSession session, Object message) throws Exception {
+        session.setAttribute(ProtocolCodecFilter.class.getName() + ".decoderOut", new MinaProtocolDecoderOutput(session, nextFilter));
+        super.messageReceived(nextFilter, session, message);
+    }
 
-	class MinaProtocolDecoderOutput implements ProtocolDecoderOutput {
+    class MinaProtocolDecoderOutput implements ProtocolDecoderOutput {
 
-		private final NextFilter nextFilter;
+        private final NextFilter nextFilter;
 
-		private final IoSession session;
+        private final IoSession session;
 
-		private final List<Object> messageQueue = new ArrayList<Object>();
+        private final List<Object> messageQueue = new ArrayList<Object>();
 
-		public MinaProtocolDecoderOutput(IoSession session,
-				NextFilter nextFilter) {
-			this.nextFilter = nextFilter;
-			this.session = session;
-		}
+        public MinaProtocolDecoderOutput(IoSession session, NextFilter nextFilter) {
+            this.nextFilter = nextFilter;
+            this.session = session;
+        }
 
-		public void flush() {
-			nextFilter.messageReceived(session, messageQueue);
-		}
+        public void flush() {
+            nextFilter.messageReceived(session, messageQueue);
+        }
 
-		public void write(Object message) {
-			messageQueue.add(message);
-			if (session instanceof BaseIoSession) {
-				((BaseIoSession) session).increaseReadMessages();
-			}
-		}
-	}
+        public void write(Object message) {
+            messageQueue.add(message);
+            if (session instanceof BaseIoSession) {
+                ((BaseIoSession) session).increaseReadMessages();
+            }
+        }
+    }
 
 }

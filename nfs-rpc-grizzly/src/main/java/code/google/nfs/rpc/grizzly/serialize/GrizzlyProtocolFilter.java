@@ -30,9 +30,7 @@ import org.glassfish.grizzly.memory.CompositeBuffer;
 public class GrizzlyProtocolFilter extends BaseFilter {
 
     private static final Log LOGGER = LogFactory.getLog(GrizzlyProtocolFilter.class);
-    private static final Attribute<CompositeBuffer> OUTPUT_BUFFER_ATTR =
-            Grizzly.DEFAULT_ATTRIBUTE_BUILDER.createAttribute(
-            "GrizzlyProtocolFilter.outputBuffer");
+    private static final Attribute<CompositeBuffer> OUTPUT_BUFFER_ATTR = Grizzly.DEFAULT_ATTRIBUTE_BUILDER.createAttribute("GrizzlyProtocolFilter.outputBuffer");
 
     // decode object
     public NextAction handleRead(FilterChainContext ctx) throws IOException {
@@ -43,23 +41,21 @@ public class GrizzlyProtocolFilter extends BaseFilter {
 
         final Buffer buffer = (Buffer) message;
 
-//        final int bufferLen = buffer.remaining();
+        // final int bufferLen = buffer.remaining();
         Object errorReturnObject = new Object();
         GrizzlyByteBufferWrapper wrapper = new GrizzlyByteBufferWrapper(buffer);
 
         try {
             final List<Object> list = new ArrayList<Object>();
             Object object;
-            while ((object = ProtocolUtils.decode(wrapper, errorReturnObject))
-                    != errorReturnObject) {
+            while ((object = ProtocolUtils.decode(wrapper, errorReturnObject)) != errorReturnObject) {
                 list.add(object);
             }
 
             if (list.isEmpty()) {
                 return ctx.getStopAction(buffer);
             } else {
-                final Buffer remainder = buffer.hasRemaining()
-                        ? buffer.split(buffer.position()) : null;
+                final Buffer remainder = buffer.hasRemaining() ? buffer.split(buffer.position()) : null;
                 buffer.dispose();
 
                 ctx.setMessage(list);
@@ -92,6 +88,7 @@ public class GrizzlyProtocolFilter extends BaseFilter {
         public IncompleteBufferHolder(Buffer buffer) {
             this.buffer = buffer;
         }
+
         private Buffer buffer;
     }
 }

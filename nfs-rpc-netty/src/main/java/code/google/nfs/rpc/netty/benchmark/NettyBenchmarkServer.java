@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty.benchmark;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -16,12 +17,12 @@ import code.google.nfs.rpc.server.Server;
  */
 public class NettyBenchmarkServer extends AbstractBenchmarkServer {
 
-	public static void main(String[] args) throws Exception{
-		new NettyBenchmarkServer().run(args);
-	}
-	
-	public Server getServer() {
-		return new NettyServer();
-	}
+    public static void main(String[] args) throws Exception {
+        new NettyBenchmarkServer().run(args);
+    }
+
+    public Server getServer() {
+        return new NettyServer();
+    }
 
 }

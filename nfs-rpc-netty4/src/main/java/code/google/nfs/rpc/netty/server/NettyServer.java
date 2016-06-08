@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty.server;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -36,53 +37,50 @@ import code.google.nfs.rpc.server.Server;
  */
 public class NettyServer implements Server {
 
-	private static final Log LOGGER = LogFactory.getLog(NettyServer.class);
-	
-	private ServerBootstrap bootstrap = null;
+    private static final Log LOGGER = LogFactory.getLog(NettyServer.class);
 
-	private AtomicBoolean startFlag = new AtomicBoolean(false);
-	
-	private static final int PROCESSORS = Runtime.getRuntime().availableProcessors();
-	
-	public NettyServer() {
-		ThreadFactory serverBossTF = new NamedThreadFactory("NETTYSERVER-BOSS-");
-		ThreadFactory serverWorkerTF = new NamedThreadFactory("NETTYSERVER-WORKER-");
-		EventLoopGroup bossGroup = new NioEventLoopGroup(PROCESSORS, serverBossTF);
-		NioEventLoopGroup workerGroup = new NioEventLoopGroup(PROCESSORS * 2,serverWorkerTF);
-		workerGroup.setIoRatio(Integer.parseInt(System.getProperty("nfs.rpc.io.ratio", "50")));
-		bootstrap = new ServerBootstrap();
-		bootstrap.group(bossGroup,workerGroup)
-			     .channel(NioServerSocketChannel.class)
-			     .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
-			     .option(ChannelOption.SO_REUSEADDR, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.reuseaddress", "true")))
-			     .option(ChannelOption.TCP_NODELAY, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")));
-	}
+    private ServerBootstrap bootstrap = null;
 
-	public void start(int listenPort, final ExecutorService threadPool) throws Exception {
-		if(!startFlag.compareAndSet(false, true)){
-			return;
-		}
-		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+    private AtomicBoolean startFlag = new AtomicBoolean(false);
 
-			protected void initChannel(SocketChannel channel) throws Exception {
-				ChannelPipeline pipeline = channel.pipeline();
-				pipeline.addLast("decoder", new NettyProtocolDecoder());
-				pipeline.addLast("encoder", new NettyProtocolEncoder());
-				pipeline.addLast("handler", new NettyServerHandler(threadPool));
-			}
-			
-		});
-		bootstrap.bind(new InetSocketAddress(listenPort)).sync();
-		LOGGER.warn("Server started,listen at: "+listenPort);
-	}
+    private static final int PROCESSORS = Runtime.getRuntime().availableProcessors();
 
-	public void registerProcessor(int protocolType,String serviceName, Object serviceInstance) {
-		ProtocolFactory.getServerHandler(protocolType).registerProcessor(serviceName, serviceInstance);
-	}
-	
-	public void stop() throws Exception {
-		LOGGER.warn("Server stop!");
-		startFlag.set(false);
-	}
+    public NettyServer() {
+        ThreadFactory serverBossTF = new NamedThreadFactory("NETTYSERVER-BOSS-");
+        ThreadFactory serverWorkerTF = new NamedThreadFactory("NETTYSERVER-WORKER-");
+        EventLoopGroup bossGroup = new NioEventLoopGroup(PROCESSORS, serverBossTF);
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup(PROCESSORS * 2, serverWorkerTF);
+        workerGroup.setIoRatio(Integer.parseInt(System.getProperty("nfs.rpc.io.ratio", "50")));
+        bootstrap = new ServerBootstrap();
+        bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT).option(ChannelOption.SO_REUSEADDR, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.reuseaddress", "true"))).option(ChannelOption.TCP_NODELAY,
+                Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")));
+    }
+
+    public void start(int listenPort, final ExecutorService threadPool) throws Exception {
+        if (!startFlag.compareAndSet(false, true)) {
+            return;
+        }
+        bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+
+            protected void initChannel(SocketChannel channel) throws Exception {
+                ChannelPipeline pipeline = channel.pipeline();
+                pipeline.addLast("decoder", new NettyProtocolDecoder());
+                pipeline.addLast("encoder", new NettyProtocolEncoder());
+                pipeline.addLast("handler", new NettyServerHandler(threadPool));
+            }
+
+        });
+        bootstrap.bind(new InetSocketAddress(listenPort)).sync();
+        LOGGER.warn("Server started,listen at: " + listenPort);
+    }
+
+    public void registerProcessor(int protocolType, String serviceName, Object serviceInstance) {
+        ProtocolFactory.getServerHandler(protocolType).registerProcessor(serviceName, serviceInstance);
+    }
+
+    public void stop() throws Exception {
+        LOGGER.warn("Server stop!");
+        startFlag.set(false);
+    }
 
 }

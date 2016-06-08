@@ -20,63 +20,63 @@ import org.glassfish.grizzly.memory.Buffers;
  */
 public class GrizzlyByteBufferWrapper implements ByteBufferWrapper {
 
-	private Buffer buffer;
-	private FilterChainContext ctx;
-	
+    private Buffer buffer;
+    private FilterChainContext ctx;
+
     public GrizzlyByteBufferWrapper(FilterChainContext ctx) {
-		this.ctx = ctx;
-	}
-	
+        this.ctx = ctx;
+    }
+
     public GrizzlyByteBufferWrapper(Buffer buffer) {
-		this.buffer = buffer;
-	}
-	
-	public ByteBufferWrapper get(int capacity) {
-		buffer = Buffers.wrap(ctx.getMemoryManager(), new byte[capacity]);
-		return this;
-	}
-	
+        this.buffer = buffer;
+    }
+
+    public ByteBufferWrapper get(int capacity) {
+        buffer = Buffers.wrap(ctx.getMemoryManager(), new byte[capacity]);
+        return this;
+    }
+
     public Buffer getBuffer() {
-		return buffer;
-	}
+        return buffer;
+    }
 
-	public byte readByte() {
-		return buffer.get();
-	}
+    public byte readByte() {
+        return buffer.get();
+    }
 
-	public void readBytes(byte[] data) {
-		buffer.get(data);
-	}
+    public void readBytes(byte[] data) {
+        buffer.get(data);
+    }
 
-	public int readInt() {
-		return buffer.getInt();
-	}
+    public int readInt() {
+        return buffer.getInt();
+    }
 
-	public int readableBytes() {
-		return buffer.remaining();
-	}
+    public int readableBytes() {
+        return buffer.remaining();
+    }
 
-	public int readerIndex() {
+    public int readerIndex() {
         return buffer.position();
-	}
+    }
 
-	public void setReaderIndex(int readerIndex) {
+    public void setReaderIndex(int readerIndex) {
         buffer.position(readerIndex);
-	}
+    }
 
-	public void writeByte(byte data) {
-		buffer.put(data);
-	}
+    public void writeByte(byte data) {
+        buffer.put(data);
+    }
 
-	public void writeByte(int index, byte data) {
-		buffer.put(index, data);
-	}
+    public void writeByte(int index, byte data) {
+        buffer.put(index, data);
+    }
 
-	public void writeBytes(byte[] data) {
-		buffer.put(data);
-	}
+    public void writeBytes(byte[] data) {
+        buffer.put(data);
+    }
 
-	public void writeInt(int data) {
-		buffer.putInt(data);
-	}
+    public void writeInt(int data) {
+        buffer.putInt(data);
+    }
 }

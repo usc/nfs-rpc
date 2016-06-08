@@ -5,6 +5,7 @@
  *   http://code.google.com/p/nfs-rpc (c) 2011
  */
 package code.google.nfs.rpc.server;
+
 /**
  * Direct RPC Call Server Processor Interface
  * 
@@ -12,13 +13,13 @@ package code.google.nfs.rpc.server;
  */
 public interface ServerProcessor {
 
-	/**
-	 * Handle request,then return Object
-	 * 
-	 * @param request
-	 * @return Object
-	 * @throws Exception
-	 */
-	public Object handle(Object request) throws Exception;
-	
+    /**
+     * Handle request,then return Object
+     * 
+     * @param request
+     * @return Object
+     * @throws Exception
+     */
+    public Object handle(Object request) throws Exception;
+
 }

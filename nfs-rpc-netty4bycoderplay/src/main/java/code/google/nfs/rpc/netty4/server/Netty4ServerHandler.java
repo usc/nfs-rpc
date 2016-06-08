@@ -29,8 +29,7 @@ import code.google.nfs.rpc.ResponseWrapper;
  */
 public class Netty4ServerHandler extends SimpleChannelInboundHandler<Object> {
 
-	private static final Log LOGGER = LogFactory
-			.getLog(Netty4ServerHandler.class);
+    private static final Log LOGGER = LogFactory.getLog(Netty4ServerHandler.class);
 
     /**
      * Calls {@link ChannelHandlerContext#fireExceptionCaught(Throwable)} to forward
@@ -39,44 +38,32 @@ public class Netty4ServerHandler extends SimpleChannelInboundHandler<Object> {
      * Sub-classes may override this method to change behavior.
      */
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-            throws Exception {
-		if(!(cause instanceof IOException)){
-			// only log
-			LOGGER.error("catch some exception not IOException", cause);
-		}
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        if (!(cause instanceof IOException)) {
+            // only log
+            LOGGER.error("catch some exception not IOException", cause);
+        }
     }
-  
-	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, Object msg)
-			throws Exception {
-		RequestWrapper request = (RequestWrapper) msg;
-		long beginTime = System.currentTimeMillis();
-		ResponseWrapper responseWrapper = ProtocolFactory.getServerHandler(
-				request.getProtocolType()).handleRequest(request);
-		final int id = request.getId();
-		// already timeout,so not return
-		if ((System.currentTimeMillis() - beginTime) >= request.getTimeout()) {
-			LOGGER.warn("timeout,so give up send response to client,requestId is:"
-					+ id
-					+ ",client is:"
-					+ ctx.channel().remoteAddress()
-					+ ",consumetime is:"
-					+ (System.currentTimeMillis() - beginTime)
-					+ ",timeout is:"
-					+ request.getTimeout());
-			return;
-		}
-		ChannelFuture wf = ctx.channel().writeAndFlush(responseWrapper);
-		wf.addListener(new ChannelFutureListener() {
-			public void operationComplete(ChannelFuture future)
-					throws Exception {
-				if (!future.isSuccess()) {
-					LOGGER.error("server write response error,request id is: "
-							+ id);
-				}
-			}
-		});
-	}
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+        RequestWrapper request = (RequestWrapper) msg;
+        long beginTime = System.currentTimeMillis();
+        ResponseWrapper responseWrapper = ProtocolFactory.getServerHandler(request.getProtocolType()).handleRequest(request);
+        final int id = request.getId();
+        // already timeout,so not return
+        if ((System.currentTimeMillis() - beginTime) >= request.getTimeout()) {
+            LOGGER.warn("timeout,so give up send response to client,requestId is:" + id + ",client is:" + ctx.channel().remoteAddress() + ",consumetime is:" + (System.currentTimeMillis() - beginTime) + ",timeout is:" + request.getTimeout());
+            return;
+        }
+        ChannelFuture wf = ctx.channel().writeAndFlush(responseWrapper);
+        wf.addListener(new ChannelFutureListener() {
+            public void operationComplete(ChannelFuture future) throws Exception {
+                if (!future.isSuccess()) {
+                    LOGGER.error("server write response error,request id is: " + id);
+                }
+            }
+        });
+    }
 
 }

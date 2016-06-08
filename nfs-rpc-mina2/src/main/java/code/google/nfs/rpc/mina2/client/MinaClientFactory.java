@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.mina2.client;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -28,61 +29,57 @@ import code.google.nfs.rpc.mina2.serialize.MinaProtocolCodecFilter;
  */
 public class MinaClientFactory extends AbstractClientFactory {
 
-	private static Log LOGGER = LogFactory.getLog(MinaClientFactory.class);
+    private static Log LOGGER = LogFactory.getLog(MinaClientFactory.class);
 
-	private static final boolean isDebugEnabled = LOGGER.isDebugEnabled();
+    private static final boolean isDebugEnabled = LOGGER.isDebugEnabled();
 
-	private static final int processorCount = Runtime.getRuntime().availableProcessors() + 1;
+    private static final int processorCount = Runtime.getRuntime().availableProcessors() + 1;
 
-	private static final AbstractClientFactory _self = new MinaClientFactory();
+    private static final AbstractClientFactory _self = new MinaClientFactory();
 
-	private SocketConnector ioConnector;
+    private SocketConnector ioConnector;
 
-	private MinaClientFactory() {
-		// only one ioConnector,avoid create too many io processor thread
-		ioConnector = new NioSocketConnector(processorCount);
-//        ioConnector.getFilterChain().addLast("executor", new ExecutorFilter(Executors.newCachedThreadPool()));
-		ioConnector.getSessionConfig().setTcpNoDelay(Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")));
-		ioConnector.getSessionConfig().setReuseAddress(true);
-		ioConnector.getFilterChain().addLast("objectserialize",new MinaProtocolCodecFilter());
-	}
+    private MinaClientFactory() {
+        // only one ioConnector,avoid create too many io processor thread
+        ioConnector = new NioSocketConnector(processorCount);
+        // ioConnector.getFilterChain().addLast("executor", new ExecutorFilter(Executors.newCachedThreadPool()));
+        ioConnector.getSessionConfig().setTcpNoDelay(Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")));
+        ioConnector.getSessionConfig().setReuseAddress(true);
+        ioConnector.getFilterChain().addLast("objectserialize", new MinaProtocolCodecFilter());
+    }
 
-	public static AbstractClientFactory getInstance() {
-		return _self;
-	}
+    public static AbstractClientFactory getInstance() {
+        return _self;
+    }
 
-	protected Client createClient(String targetIP, int targetPort,
-			int connectTimeout, String key) throws Exception {
-		if (isDebugEnabled) {
-			LOGGER.debug("create connection to :" + targetIP + ":" + targetPort
-					+ ",timeout is:" + connectTimeout + ",key is:" + key);
-		}
-		if (connectTimeout > 1000) {
-			ioConnector.setConnectTimeoutMillis((int) connectTimeout);
-		} else {
-			ioConnector.setConnectTimeoutMillis(1000);
-		}
-		SocketAddress targetAddress = new InetSocketAddress(targetIP,targetPort);
-		MinaClientProcessor processor = new MinaClientProcessor(this, key);
-		ioConnector.setHandler(processor);
-		ConnectFuture connectFuture = ioConnector.connect(targetAddress);
-		// wait for connection established
-		connectFuture.awaitUninterruptibly();
+    protected Client createClient(String targetIP, int targetPort, int connectTimeout, String key) throws Exception {
+        if (isDebugEnabled) {
+            LOGGER.debug("create connection to :" + targetIP + ":" + targetPort + ",timeout is:" + connectTimeout + ",key is:" + key);
+        }
+        if (connectTimeout > 1000) {
+            ioConnector.setConnectTimeoutMillis((int) connectTimeout);
+        } else {
+            ioConnector.setConnectTimeoutMillis(1000);
+        }
+        SocketAddress targetAddress = new InetSocketAddress(targetIP, targetPort);
+        MinaClientProcessor processor = new MinaClientProcessor(this, key);
+        ioConnector.setHandler(processor);
+        ConnectFuture connectFuture = ioConnector.connect(targetAddress);
+        // wait for connection established
+        connectFuture.awaitUninterruptibly();
 
-		IoSession ioSession = connectFuture.getSession();
-		if ((ioSession == null) || (!ioSession.isConnected())) {
-			String targetUrl = targetIP + ":" + targetPort;
-			LOGGER.error("create connection error,targetaddress is " + targetUrl);
-			throw new Exception("create connection error,targetaddress is " + targetUrl);
-		}
-		if (isDebugEnabled) {
-			LOGGER.debug("create connection to :" + targetIP + ":" + targetPort
-					+ ",timeout is:" + connectTimeout + ",key is:" + key
-					+ " successed");
-		}
-		MinaClient client = new MinaClient(ioSession, key, connectTimeout);
-		processor.setClient(client);
-		return client;
-	}
+        IoSession ioSession = connectFuture.getSession();
+        if ((ioSession == null) || (!ioSession.isConnected())) {
+            String targetUrl = targetIP + ":" + targetPort;
+            LOGGER.error("create connection error,targetaddress is " + targetUrl);
+            throw new Exception("create connection error,targetaddress is " + targetUrl);
+        }
+        if (isDebugEnabled) {
+            LOGGER.debug("create connection to :" + targetIP + ":" + targetPort + ",timeout is:" + connectTimeout + ",key is:" + key + " successed");
+        }
+        MinaClient client = new MinaClient(ioSession, key, connectTimeout);
+        processor.setClient(client);
+        return client;
+    }
 
 }

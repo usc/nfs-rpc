@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.mina.serialize;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -8,6 +9,7 @@ package code.google.nfs.rpc.mina.serialize;
 import org.apache.mina.common.ByteBuffer;
 
 import code.google.nfs.rpc.protocol.ByteBufferWrapper;
+
 /**
  * Implements ByteBufferWrapper based on ByteBuffer
  * 
@@ -15,63 +17,63 @@ import code.google.nfs.rpc.protocol.ByteBufferWrapper;
  */
 public class MinaByteBufferWrapper implements ByteBufferWrapper {
 
-	private ByteBuffer byteBuffer;
-	
-	public MinaByteBufferWrapper(){
-		;
-	}
-	
-	public MinaByteBufferWrapper(ByteBuffer in){
-		this.byteBuffer = in;
-	}
-	
-	public ByteBufferWrapper get(int capacity) {
-		byteBuffer = ByteBuffer.allocate(capacity,false);
-		return this;
-	}
+    private ByteBuffer byteBuffer;
 
-	public byte readByte() {
-		return byteBuffer.get();
-	}
+    public MinaByteBufferWrapper() {
+        ;
+    }
 
-	public void readBytes(byte[] dst) {
-		byteBuffer.get(dst);
-	}
+    public MinaByteBufferWrapper(ByteBuffer in) {
+        this.byteBuffer = in;
+    }
 
-	public int readInt() {
-		return byteBuffer.getInt();
-	}
+    public ByteBufferWrapper get(int capacity) {
+        byteBuffer = ByteBuffer.allocate(capacity, false);
+        return this;
+    }
 
-	public int readableBytes() {
-		return byteBuffer.remaining();
-	}
+    public byte readByte() {
+        return byteBuffer.get();
+    }
 
-	public int readerIndex() {
-		return byteBuffer.position();
-	}
+    public void readBytes(byte[] dst) {
+        byteBuffer.get(dst);
+    }
 
-	public void setReaderIndex(int index) {
-		byteBuffer.position(index);
-	}
+    public int readInt() {
+        return byteBuffer.getInt();
+    }
 
-	public void writeByte(byte data) {
-		byteBuffer.put(data);
-	}
+    public int readableBytes() {
+        return byteBuffer.remaining();
+    }
 
-	public void writeBytes(byte[] data) {
-		byteBuffer.put(data);
-	}
+    public int readerIndex() {
+        return byteBuffer.position();
+    }
 
-	public void writeInt(int data) {
-		byteBuffer.putInt(data);
-	}
-	
-	public ByteBuffer getByteBuffer(){
-		return byteBuffer;
-	}
+    public void setReaderIndex(int index) {
+        byteBuffer.position(index);
+    }
 
-	public void writeByte(int index, byte data) {
-		byteBuffer.put(index,data);
-	}
+    public void writeByte(byte data) {
+        byteBuffer.put(data);
+    }
+
+    public void writeBytes(byte[] data) {
+        byteBuffer.put(data);
+    }
+
+    public void writeInt(int data) {
+        byteBuffer.putInt(data);
+    }
+
+    public ByteBuffer getByteBuffer() {
+        return byteBuffer;
+    }
+
+    public void writeByte(int index, byte data) {
+        byteBuffer.put(index, data);
+    }
 
 }

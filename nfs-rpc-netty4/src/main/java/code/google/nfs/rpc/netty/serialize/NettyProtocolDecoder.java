@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty.serialize;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -18,14 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import code.google.nfs.rpc.protocol.ProtocolUtils;
+
 /**
  * decode byte[]
  * 
  * @author <a href="mailto:bluedavy@gmail.com">bluedavy</a>
  */
 public class NettyProtocolDecoder extends ChannelInboundHandlerAdapter {
-	
-	ByteBuf cumulation;
+
+    ByteBuf cumulation;
     private boolean singleDecode;
     private boolean decodeWasNull;
 
@@ -74,7 +76,7 @@ public class NettyProtocolDecoder extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-    	RecyclableArrayList out = RecyclableArrayList.newInstance();
+        RecyclableArrayList out = RecyclableArrayList.newInstance();
         try {
             if (msg instanceof ByteBuf) {
                 ByteBuf data = (ByteBuf) msg;
@@ -124,8 +126,8 @@ public class NettyProtocolDecoder extends ChannelInboundHandlerAdapter {
 
             List<Object> results = new ArrayList<Object>();
             for (Object result : out) {
-				results.add(result);
-			}
+                results.add(result);
+            }
             ctx.fireChannelRead(results);
 
             out.recycle();
@@ -163,13 +165,13 @@ public class NettyProtocolDecoder extends ChannelInboundHandlerAdapter {
                 cumulation = null;
             }
 
-            for (int i = 0; i < out.size(); i ++) {
+            for (int i = 0; i < out.size(); i++) {
                 ctx.fireChannelRead(out.get(i));
             }
             ctx.fireChannelInactive();
         }
     }
-    
+
     @Override
     public final void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         ByteBuf buf = internalBuffer();
@@ -183,20 +185,24 @@ public class NettyProtocolDecoder extends ChannelInboundHandlerAdapter {
         ctx.fireChannelReadComplete();
         handlerRemoved0(ctx);
     }
-    
+
     /**
      * Gets called after the {@link ByteToMessageDecoder} was removed from the actual context and it doesn't handle
      * events anymore.
      */
-    protected void handlerRemoved0(ChannelHandlerContext ctx) throws Exception { }
+    protected void handlerRemoved0(ChannelHandlerContext ctx) throws Exception {
+    }
 
     /**
      * Called once data should be decoded from the given {@link ByteBuf}. This method will call
      * {@link #decode(ChannelHandlerContext, ByteBuf, List)} as long as decoding should take place.
      *
-     * @param ctx           the {@link ChannelHandlerContext} which this {@link ByteToMessageDecoder} belongs to
-     * @param in            the {@link ByteBuf} from which to read data
-     * @param out           the {@link List} to which decoded messages should be added
+     * @param ctx
+     *            the {@link ChannelHandlerContext} which this {@link ByteToMessageDecoder} belongs to
+     * @param in
+     *            the {@link ByteBuf} from which to read data
+     * @param out
+     *            the {@link List} to which decoded messages should be added
      */
     protected void callDecode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         try {
@@ -222,9 +228,7 @@ public class NettyProtocolDecoder extends ChannelInboundHandlerAdapter {
                 }
 
                 if (oldInputLength == in.readableBytes()) {
-                    throw new DecoderException(
-                            StringUtil.simpleClassName(getClass()) +
-                            ".decode() did not read anything but decoded a message.");
+                    throw new DecoderException(StringUtil.simpleClassName(getClass()) + ".decode() did not read anything but decoded a message.");
                 }
 
                 if (isSingleDecode()) {
@@ -237,16 +241,16 @@ public class NettyProtocolDecoder extends ChannelInboundHandlerAdapter {
             throw new DecoderException(cause);
         }
     }
-	
-	protected void decode(ChannelHandlerContext ctx,ByteBuf buf, List<Object> out) throws Exception {
-		NettyByteBufferWrapper wrapper = new NettyByteBufferWrapper(buf);
-		Object result = ProtocolUtils.decode(wrapper, null);
-		if(result != null){
-			out.add(result);
-		}
-	}
-	
-	/**
+
+    protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
+        NettyByteBufferWrapper wrapper = new NettyByteBufferWrapper(buf);
+        Object result = ProtocolUtils.decode(wrapper, null);
+        if (result != null) {
+            out.add(result);
+        }
+    }
+
+    /**
      * Is called one last time when the {@link ChannelHandlerContext} goes in-active. Which means the
      * {@link #channelInactive(ChannelHandlerContext)} was triggered.
      *

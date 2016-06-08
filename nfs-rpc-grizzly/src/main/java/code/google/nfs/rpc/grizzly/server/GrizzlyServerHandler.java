@@ -39,7 +39,7 @@ public class GrizzlyServerHandler extends BaseFilter {
     public GrizzlyServerHandler(final ExecutorService threadPool) {
         this.threadPool = threadPool;
     }
-    
+
     public NextAction handleRead(final FilterChainContext ctx) throws IOException {
         final Object message = ctx.getMessage();
         final Connection connection = ctx.getConnection();
@@ -47,8 +47,7 @@ public class GrizzlyServerHandler extends BaseFilter {
         try {
             threadPool.execute(new HandlerRunnable(connection, message, threadPool));
         } catch (RejectedExecutionException exception) {
-            LOGGER.error("server threadpool full,threadpool maxsize is:"
-                    + ((ThreadPoolExecutor) threadPool).getMaximumPoolSize());
+            LOGGER.error("server threadpool full,threadpool maxsize is:" + ((ThreadPoolExecutor) threadPool).getMaximumPoolSize());
             if (message instanceof List) {
                 List<RequestWrapper> requests = (List<RequestWrapper>) message;
                 for (final RequestWrapper request : requests) {
@@ -61,9 +60,9 @@ public class GrizzlyServerHandler extends BaseFilter {
 
         return ctx.getStopAction();
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	private void sendErrorResponse(final Connection connection, final RequestWrapper request) throws IOException {
+    private void sendErrorResponse(final Connection connection, final RequestWrapper request) throws IOException {
         ResponseWrapper responseWrapper = new ResponseWrapper(request.getId(), request.getCodecType(), request.getProtocolType());
         responseWrapper.setException(new Exception("server threadpool full,maybe because server is slow or too many requests"));
 
@@ -71,9 +70,9 @@ public class GrizzlyServerHandler extends BaseFilter {
 
             @Override
             public void failed(Throwable throwable) {
-                  LOGGER.error("server write response error,request id is: " + request.getId());
+                LOGGER.error("server write response error,request id is: " + request.getId());
             }
-            
+
         });
     }
 
@@ -83,9 +82,7 @@ public class GrizzlyServerHandler extends BaseFilter {
         private final Object message;
         private final ExecutorService threadPool;
 
-        public HandlerRunnable(Connection connection,
-                Object message,
-                ExecutorService threadPool) {
+        public HandlerRunnable(Connection connection, Object message, ExecutorService threadPool) {
             this.connection = connection;
             this.message = message;
             this.threadPool = threadPool;
@@ -106,10 +103,7 @@ public class GrizzlyServerHandler extends BaseFilter {
                 final int id = request.getId();
                 // already timeout,so not return
                 if ((System.currentTimeMillis() - beginTime) >= request.getTimeout()) {
-                    LOGGER.warn("timeout,so give up send response to client,requestId is:"
-                            + id
-                            + ",client is:"
-                            + connection.getPeerAddress() + ",consumetime is:" + (System.currentTimeMillis() - beginTime) + ",timeout is:" + request.getTimeout());
+                    LOGGER.warn("timeout,so give up send response to client,requestId is:" + id + ",client is:" + connection.getPeerAddress() + ",consumetime is:" + (System.currentTimeMillis() - beginTime) + ",timeout is:" + request.getTimeout());
                     return;
                 }
 
@@ -122,5 +116,5 @@ public class GrizzlyServerHandler extends BaseFilter {
             }
         }
     }
-    
+
 }

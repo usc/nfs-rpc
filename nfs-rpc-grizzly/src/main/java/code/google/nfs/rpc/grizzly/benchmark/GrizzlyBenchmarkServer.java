@@ -18,14 +18,14 @@ import code.google.nfs.rpc.server.Server;
 public class GrizzlyBenchmarkServer extends AbstractBenchmarkServer {
 
     public static void main(String[] args) throws Exception {
-//        String[] myArgs = new String[] {"9090", "20", "100"};
-		new GrizzlyBenchmarkServer().run(args);
-        while(true){
-        	Thread.sleep(Integer.MAX_VALUE);
+        // String[] myArgs = new String[] {"9090", "20", "100"};
+        new GrizzlyBenchmarkServer().run(args);
+        while (true) {
+            Thread.sleep(Integer.MAX_VALUE);
         }
-	}
-	
-	public Server getServer() {
-		return new GrizzlyServer();
-	}
+    }
+
+    public Server getServer() {
+        return new GrizzlyServer();
+    }
 }

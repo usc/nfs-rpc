@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty.client;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -11,22 +12,20 @@ import java.util.Map;
 
 import code.google.nfs.rpc.client.AbstractClientInvocationHandler;
 import code.google.nfs.rpc.client.ClientFactory;
+
 /**
  * Netty Client Invocation Handler for Client Proxy
  * 
  * @author <a href="mailto:bluedavy@gmail.com">bluedavy</a>
  */
-public class NettyClientInvocationHandler extends
-		AbstractClientInvocationHandler {
+public class NettyClientInvocationHandler extends AbstractClientInvocationHandler {
 
-	public NettyClientInvocationHandler(List<InetSocketAddress> servers,
-			int clientNums, int connectTimeout, String targetInstanceName,
-			Map<String, Integer> methodTimeouts,int codectype, Integer protocolType) {
-		super(servers, clientNums, connectTimeout, targetInstanceName, methodTimeouts,codectype,protocolType);
-	}
+    public NettyClientInvocationHandler(List<InetSocketAddress> servers, int clientNums, int connectTimeout, String targetInstanceName, Map<String, Integer> methodTimeouts, int codectype, Integer protocolType) {
+        super(servers, clientNums, connectTimeout, targetInstanceName, methodTimeouts, codectype, protocolType);
+    }
 
-	public ClientFactory getClientFactory() {
-		return NettyClientFactory.getInstance();
-	}
+    public ClientFactory getClientFactory() {
+        return NettyClientFactory.getInstance();
+    }
 
 }

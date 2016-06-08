@@ -39,8 +39,7 @@ public class GrizzlyClientFactory extends AbstractClientFactory {
     }
 
     @SuppressWarnings("rawtypes")
-    protected Client createClient(String targetIP, int targetPort, int connectTimeout, String key)
-            throws Exception {
+    protected Client createClient(String targetIP, int targetPort, int connectTimeout, String key) throws Exception {
         Connection connection = null;
         GrizzlyClientHandler handler = new GrizzlyClientHandler();
         FilterChainBuilder filterChainBuilder = FilterChainBuilder.stateless();
@@ -48,17 +47,16 @@ public class GrizzlyClientFactory extends AbstractClientFactory {
         filterChainBuilder.add(new GrizzlyProtocolFilter());
         filterChainBuilder.add(handler);
 
-
         final TCPNIOTransportBuilder transportBuilder = TCPNIOTransportBuilder.newInstance();
         transportBuilder.setOptimizedForMultiplexing(true);
 
         transportBuilder.setIOStrategy(SameThreadIOStrategy.getInstance());
-        
+
         final TCPNIOTransport transport = transportBuilder.build();
         transport.setTcpNoDelay(Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")));
 
         transport.setProcessor(filterChainBuilder.build());
-                
+
         transport.start();
         Future<Connection> future = transport.connect(targetIP, targetPort);
         if (connectTimeout < 1000) {
@@ -69,5 +67,5 @@ public class GrizzlyClientFactory extends AbstractClientFactory {
         GrizzlyClient client = new GrizzlyClient(targetIP, targetPort, connectTimeout, connection, key);
         handler.setClient(client);
         return client;
-    }    
+    }
 }

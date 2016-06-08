@@ -1,4 +1,5 @@
 package code.google.nfs.rpc;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -15,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NamedThreadFactory implements ThreadFactory {
 
-	static final AtomicInteger poolNumber = new AtomicInteger(1);
+    static final AtomicInteger poolNumber = new AtomicInteger(1);
 
     final AtomicInteger threadNumber = new AtomicInteger(1);
     final ThreadGroup group;
@@ -30,16 +31,13 @@ public class NamedThreadFactory implements ThreadFactory {
     }
     public NamedThreadFactory(String preffix, boolean daemon) {
         SecurityManager s = System.getSecurityManager();
-        group = (s != null) ? s.getThreadGroup() : Thread.currentThread()
-                .getThreadGroup();
+        group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
         namePrefix = preffix + "-" + poolNumber.getAndIncrement() + "-thread-";
         isDaemon = daemon;
     }
 
-
-	public Thread newThread(Runnable r) {
-        Thread t = new Thread(group, r, namePrefix
-                + threadNumber.getAndIncrement(), 0);
+    public Thread newThread(Runnable r) {
+        Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
         t.setDaemon(isDaemon);
         if (t.getPriority() != Thread.NORM_PRIORITY) {
             t.setPriority(Thread.NORM_PRIORITY);
@@ -48,4 +46,3 @@ public class NamedThreadFactory implements ThreadFactory {
     }
 
 }
-

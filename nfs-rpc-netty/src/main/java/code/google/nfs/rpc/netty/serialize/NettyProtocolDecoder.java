@@ -1,4 +1,5 @@
 package code.google.nfs.rpc.netty.serialize;
+
 /**
  * nfs-rpc
  *   Apache License
@@ -18,18 +19,19 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
 import code.google.nfs.rpc.protocol.ProtocolUtils;
+
 /**
  * decode byte[]
- * 	change to pipeline receive requests or responses,let's IO thread do less thing
+ * change to pipeline receive requests or responses,let's IO thread do less thing
  * 
  * @author <a href="mailto:bluedavy@gmail.com">bluedavy</a>
  */
 public class NettyProtocolDecoder extends FrameDecoder {
-	
-	private ChannelBuffer cumulation;
-	
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		Object m = e.getMessage();
+
+    private ChannelBuffer cumulation;
+
+    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+        Object m = e.getMessage();
         if (!(m instanceof ChannelBuffer)) {
             ctx.sendUpstream(e);
             return;
@@ -51,18 +53,16 @@ public class NettyProtocolDecoder extends FrameDecoder {
                 cumulation.writeBytes(input);
             }
         }
-	}
-	
-	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer in) throws Exception {
-		NettyByteBufferWrapper wrapper = new NettyByteBufferWrapper(in);
-		return ProtocolUtils.decode(wrapper, null);
-	}
-	
-	private void callDecode(
-            ChannelHandlerContext context, Channel channel,
-            ChannelBuffer cumulation, SocketAddress remoteAddress) throws Exception {
-		// pipeline to receive requests or responses
-		List<Object> results = new ArrayList<Object>();
+    }
+
+    protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer in) throws Exception {
+        NettyByteBufferWrapper wrapper = new NettyByteBufferWrapper(in);
+        return ProtocolUtils.decode(wrapper, null);
+    }
+
+    private void callDecode(ChannelHandlerContext context, Channel channel, ChannelBuffer cumulation, SocketAddress remoteAddress) throws Exception {
+        // pipeline to receive requests or responses
+        List<Object> results = new ArrayList<Object>();
         while (cumulation.readable()) {
             int oldReaderIndex = cumulation.readerIndex();
             Object frame = decode(context, channel, cumulation);
@@ -77,26 +77,23 @@ public class NettyProtocolDecoder extends FrameDecoder {
                     continue;
                 }
             } else if (oldReaderIndex == cumulation.readerIndex()) {
-                throw new IllegalStateException(
-                        "decode() method must read at least one byte " +
-                        "if it returned a frame (caused by: " + getClass() + ")");
+                throw new IllegalStateException("decode() method must read at least one byte " + "if it returned a frame (caused by: " + getClass() + ")");
             }
-            
+
             results.add(frame);
         }
-        if(results.size() > 0)
-        	fireMessageReceived(context, remoteAddress, results);
+        if (results.size() > 0)
+            fireMessageReceived(context, remoteAddress, results);
     }
-	
-	private void fireMessageReceived(ChannelHandlerContext context, SocketAddress remoteAddress, Object result) {
+
+    private void fireMessageReceived(ChannelHandlerContext context, SocketAddress remoteAddress, Object result) {
         Channels.fireMessageReceived(context, result, remoteAddress);
     }
-	
-	private ChannelBuffer cumulation(ChannelHandlerContext ctx) {
+
+    private ChannelBuffer cumulation(ChannelHandlerContext ctx) {
         ChannelBuffer c = cumulation;
         if (c == null) {
-            c = ChannelBuffers.dynamicBuffer(
-                    ctx.getChannel().getConfig().getBufferFactory());
+            c = ChannelBuffers.dynamicBuffer(ctx.getChannel().getConfig().getBufferFactory());
             cumulation = c;
         }
         return c;

@@ -1,8 +1,9 @@
 package code.google.nfs.rpc.netty4.benchmark;
+
 /**
  * nfs-rpc
  *   Apache License
- *   
+ *
  *   http://code.google.com/p/nfs-rpc (c) 2011
  */
 import java.lang.reflect.Proxy;
@@ -16,26 +17,18 @@ import code.google.nfs.rpc.netty4.client.Netty4ClientInvocationHandler;
 
 /**
  * Netty4 RPC Benchmark Client
- * 
+ *
  * @author <a href="mailto:coderplay@gmail.com">Min Zhou</a>
  */
 public class Netty4RPCBenchmarkClient extends AbstractRPCBenchmarkClient {
 
-	public static void main(String[] args) throws Exception {
-		new Netty4RPCBenchmarkClient().run(args);
-	}
+    public static void main(String[] args) throws Exception {
+        args = new String[] { "127.0.0.1", "9527", "100", "1000", "1", "100", "60", "1" };
+        new Netty4RPCBenchmarkClient().run(args);
+    }
 
-	public BenchmarkTestService getProxyInstance(
-			List<InetSocketAddress> servers, int clientNums,
-			int connectTimeout, String targetInstanceName,
-			Map<String, Integer> methodTimeouts, int codectype,
-			Integer protocolType) {
-		return (BenchmarkTestService) Proxy.newProxyInstance(
-				Netty4RPCBenchmarkClient.class.getClassLoader(),
-				new Class<?>[] { BenchmarkTestService.class },
-				new Netty4ClientInvocationHandler(servers, clientNums,
-						connectTimeout, targetInstanceName, methodTimeouts,
-						codectype, protocolType));
-	}
+    public BenchmarkTestService getProxyInstance(List<InetSocketAddress> servers, int clientNums, int connectTimeout, String targetInstanceName, Map<String, Integer> methodTimeouts, int codectype, Integer protocolType) {
+        return (BenchmarkTestService) Proxy.newProxyInstance(Netty4RPCBenchmarkClient.class.getClassLoader(), new Class<?>[] { BenchmarkTestService.class }, new Netty4ClientInvocationHandler(servers, clientNums, connectTimeout, targetInstanceName, methodTimeouts, codectype, protocolType));
+    }
 
 }
