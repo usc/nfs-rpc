@@ -17,13 +17,12 @@ import code.google.nfs.rpc.server.Server;
  *   http://code.google.com/p/nfs-rpc (c) 2011
  */
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.util.concurrent.DefaultEventExecutorGroup;
-import io.netty.util.concurrent.EventExecutorGroup;
 
 /**
  * Netty4 Server
@@ -37,7 +36,7 @@ public class Netty4Server implements Server {
 
     private NioEventLoopGroup bossGroup;
     private NioEventLoopGroup ioGroup;
-    private EventExecutorGroup businessGroup;
+    // private EventExecutorGroup businessGroup;
     private final int businessThreads;
 
     public Netty4Server(int businessThreads) {
@@ -50,11 +49,13 @@ public class Netty4Server implements Server {
         }
         bossGroup = new NioEventLoopGroup();
         ioGroup = new NioEventLoopGroup();
-        businessGroup = new DefaultEventExecutorGroup(businessThreads);
+        // businessGroup = new DefaultEventExecutorGroup(businessThreads);
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, ioGroup)
                 .channel(NioServerSocketChannel.class)
+                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .childOption(ChannelOption.TCP_NODELAY, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.nodelay", "true")))
                 .childOption(ChannelOption.SO_REUSEADDR, Boolean.parseBoolean(System.getProperty("nfs.rpc.tcp.reuseaddress", "true")))
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -62,7 +63,8 @@ public class Netty4Server implements Server {
                     public void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast("decoder", new Netty4ProtocolDecoder());
                         ch.pipeline().addLast("encoder", new Netty4ProtocolEncoder());
-                        ch.pipeline().addLast(businessGroup, "handler", new Netty4ServerHandler());
+                        // ch.pipeline().addLast(businessGroup, "handler", new Netty4ServerHandler());
+                        ch.pipeline().addLast("handler", new Netty4ServerHandler());
                     }
                 });
 
@@ -78,7 +80,7 @@ public class Netty4Server implements Server {
         LOGGER.warn("Server stop!");
         bossGroup.shutdownGracefully();
         ioGroup.shutdownGracefully();
-        businessGroup.shutdownGracefully();
+        // businessGroup.shutdownGracefully();
         startFlag.set(false);
     }
 

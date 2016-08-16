@@ -18,7 +18,7 @@ import code.google.nfs.rpc.netty.client.NettyClientFactory;
 public class NettySimpleBenchmarkClient extends AbstractSimpleProcessorBenchmarkClient {
 
     public static void main(String[] args) throws Exception {
-        args = new String[] { "127.0.0.1", "9527", "100", "1000", "3", "100", "120", "1" };
+        args = new String[] { "127.0.0.1", "9527", "100", "1000", "1", "100", "60", "20" };
         new NettySimpleBenchmarkClient().run(args);
     }
 
